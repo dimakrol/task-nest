@@ -1,5 +1,6 @@
 #config
-/src/config/typeorm.config.ts
+config/development.yml
+config/production.yml
 
 # compiled output
 /dist

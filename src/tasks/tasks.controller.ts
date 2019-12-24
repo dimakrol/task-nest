@@ -2,12 +2,11 @@ import {Body, Controller, Delete, Get, Logger, Param, ParseIntPipe, Patch, Post,
 import {TasksService} from './tasks.service';
 import {CreateTaskDto} from './dto/create-task.dto';
 import {GetTasksFilterDto} from './dto/get-tasks-filter.dto';
-import {TaskStatusValidationPipe} from './ pipes/task-status-validation.pipe';
 import {Task} from './task.entity';
-import {TaskStatus} from './task-status.enum';
 import {AuthGuard} from '@nestjs/passport';
 import {User} from '../auth/user.entity';
 import {GetUser} from '../auth/get-user.decorator';
+import {UpdateStatusDto} from './dto/update-status.dto';
 
 @Controller('tasks')
 @UseGuards(AuthGuard())
@@ -37,13 +36,13 @@ export class TasksController {
         this.logger.verbose(`User ${user.username} created a task. Data: ${JSON.stringify(createTaskDto)}`)
         return this.tasksService.createTask(createTaskDto, user);
     }
-    @Patch('/:id/:status')
+    @Patch('/:id/status')
     updateTaskStatus(
         @Param('id', ParseIntPipe) id: number,
-        @Param('status', TaskStatusValidationPipe) status: TaskStatus,
+        @Body() updateStatus: UpdateStatusDto,
         @GetUser() user: User,
     ): Promise<Task> {
-        return this.tasksService.updateStatus(id, status, user);
+        return this.tasksService.updateStatus(id, updateStatus.status, user);
     }
     @Delete('/:id')
     deleteTask(@Param('id', ParseIntPipe) id: number,
