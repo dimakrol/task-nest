@@ -36,7 +36,8 @@ export class TasksService {
     async updateStatus(id: number, status: TaskStatus, user: User): Promise<Task> {
         const task = await this.getTaskById(id, user);
         task.status = status;
-        return await task.save();
+        await task.save();
+        return task;
     }
 
     async deleteTask(id: number, user: User): Promise<void> {
